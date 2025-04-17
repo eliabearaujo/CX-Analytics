@@ -154,13 +154,15 @@ To track this indicator, we can use the query below.
 ```sql
 SELECT
     CX_Contacts.contact_reason,
-    COUNT(CX_Contacts.ticket_id) AS total_contacts,
+    COUNT(CX_Contacts.ticket_id) AS frequency,
     CAST(COUNT(CX_Contacts.ticket_id) AS DECIMAL(10, 2)) /
-    (SELECT COUNT(*) FROM CX_Contacts) * 100 AS percentage_of_total
+    (SELECT COUNT(*) FROM CX_Contacts) * 100 AS relative_frequency
 FROM
     CX_Contacts
 GROUP BY
-    CX_Contacts.contact_reason;
+    CX_Contacts.contact_reason
+ORDER BY
+    relative_frequency;
 ```
 
 The expected result is something similar to the table below.
@@ -239,3 +241,7 @@ ORDER BY
 The expected result is something similar to the table below.
 
 ![contac_rate](img/csat.png)
+
+## Conclusion
+
+With the queries presented, it will be possible to verify and analyze more deeply the reason for the increase in the number of contacts. However, with a larger data volume, it would be possible to conduct a more thorough study. Some indicators can also help us map the problem, such as the categorization of analysts into quartiles, the 12-hour SLA, first contact resolution rate, and some other breakdowns that would allow us to categorize the tickets.
